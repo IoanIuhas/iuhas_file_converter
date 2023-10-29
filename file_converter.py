@@ -34,15 +34,15 @@ class FileConverterApp:
 
         self.frame = ttk.Frame(root, width = 300, height = 330, padding = 20)
 
-        self.input_label_frame = ttk.LabelFrame(self.frame, labelanchor = "n", padding = (0, 5, 0, 5), width = 200, height = "100")
+        self.input_label_frame = ttk.LabelFrame(self.frame, labelanchor = "n", padding = (0, 5, 0, 5), width = 200, height = 100)
         self.input_label = ttk.Label(self.input_label_frame, text = "Select a file to convert", padding = (0, 0, 0, 5), justify = "center")
         self.input_button = ttk.Button(self.input_label_frame, text = "Browse", command = self.browse_file)
 
-        self.output_label_frame = ttk.LabelFrame(self.frame, labelanchor = "n", padding = (0, 5, 0, 5), width = 200, height = "100")
+        self.output_label_frame = ttk.LabelFrame(self.frame, labelanchor = "n", padding = (0, 5, 0, 5), width = 200, height = 100)
         self.output_label = ttk.Label(self.output_label_frame, text = "Select the output format", padding = (0, 0, 0, 5), justify = "center")
         self.output_format_var = tk.StringVar()
-        self.output_format_var.set("txt")  # Default format
         self.output_format_menu = ttk.OptionMenu(self.output_label_frame, self.output_format_var,"txt", "txt", "csv", "xlsx", "pdf")
+        # self.output_format_var.set("csv")  # Default format
 
         self.separator_label = ttk.Label(self.frame)
         self.convert_button = ttk.Button(self.frame, text = "Convert", command = self.convert_file)
@@ -123,10 +123,10 @@ class FileConverterApp:
             filetypes = [(f"{self.output_format.upper()} files", f"*.{self.output_format}")]
         )
 
-        self.output_file_name = self.output_file_path[self.output_file_path.rindex('/')+1:]
-
         if not self.output_file_path:
             return
+
+        self.output_file_name = self.output_file_path[self.output_file_path.rindex('/')+1:]
 
         # Write resulting file to selected path
         self.write_to_output_file(self.data)
@@ -152,14 +152,14 @@ class FileConverterApp:
         elif self.output_format.endswith("csv"):
             if self.data_type == "text":
                 lines = data.split(sep="\n")
-                data = pd.DataFrame(data = lines, columns = ['Text'])
+                data = pd.DataFrame(data = lines, columns = [''])
             data.to_csv(self.output_file_path, index=False)
 
         # Xlsx output, when input data_type is text, loads it into a new DataFrame first
         elif self.output_format.endswith("xlsx"):
             if self.data_type == "text":
                 lines = data.split(sep = "\n")
-                data = pd.DataFrame(data = lines, columns = ['Text'])
+                data = pd.DataFrame(data = lines, columns = [''])
             data.to_excel(self.output_file_path, index = False)
 
         # Pdf output, when input data_type is dataframe, converts it to html first
